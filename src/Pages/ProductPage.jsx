@@ -11,7 +11,7 @@ const ProductPage = () => {
  useEffect(() => {
    const fetchProducts = async () => {
      try {
-       const response = await fetch("https://6795f8febedc5d43a6c3e8b3.mockapi.io/products");
+       const response = await fetch("http://localhost:5432/api/products");
        const data = await response.json();
        setProducts(data);
      } catch (error) {
@@ -24,7 +24,7 @@ const ProductPage = () => {
  const addProduct = async (product) => {
    try {
      const response = await fetch(
-       "https://6795f8febedc5d43a6c3e8b3.mockapi.io/products",
+       "http://localhost:5432/api/products",
        {
          method: "POST",
          headers: {
@@ -44,7 +44,7 @@ const ProductPage = () => {
  const updateProduct = async (product, id) => {
    try {
      const response = await fetch(
-       `https://6795f8febedc5d43a6c3e8b3.mockapi.io/products/${id}`,
+       `http://localhost:5432/api/products/${id}`,
        {
          method: "PUT",
          headers: {
@@ -66,7 +66,7 @@ const ProductPage = () => {
  const deleteProduct = async (id) => {
    try {
      await fetch(
-       `https://6795f8febedc5d43a6c3e8b3.mockapi.io/products/${id}`,
+       `http://localhost:5432/api/products/${id}`,
        {
          method: "DELETE",
        }
@@ -138,3 +138,5 @@ const ProductPage = () => {
 };
 
 export default ProductPage;
+
+
