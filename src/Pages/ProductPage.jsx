@@ -11,7 +11,7 @@ const [searchTerm, setSearchTerm] = useState("");
 useEffect(() => {
   const fetchProducts = async () => {
     try {
-      const response = await fetch("http://localhost:8080/api/products");
+      const response = await fetch("https://products-three-self.vercel.app/api/products");
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
@@ -27,7 +27,7 @@ useEffect(() => {
 const addProduct = async (product) => {
   try {
     const response = await fetch(
-      "http://localhost:8080/api/products",
+      "https://products-three-self.vercel.app/api/products",
       {
         method: "POST",
         headers: {
@@ -50,7 +50,7 @@ const addProduct = async (product) => {
 const updateProduct = async (product, id) => {
   try {
     const response = await fetch(
-      `http://localhost:8080/api/products/${id}`,
+      `https://products-three-self.vercel.app/api/products/${id}`,
       {
         method: "PUT",
         headers: {
@@ -75,7 +75,7 @@ const updateProduct = async (product, id) => {
 const deleteProduct = async (id) => {
   try {
     const response = await fetch(
-      `http://localhost:8080/api/products/${id}`,
+      `https://products-three-self.vercel.app/api/products/${id}`,
       {
         method: "DELETE",
       }
