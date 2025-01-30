@@ -9,143 +9,137 @@ const [products, setProducts] = useState([]);
 const [searchTerm, setSearchTerm] = useState("");
 
 useEffect(() => {
-  const fetchProducts = async () => {
-    try {
-      const response = await fetch("http://localhost:8080/api/products");
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      const data = await response.json();
-      setProducts(data);
-    } catch (error) {
-      toast.error("Failed to fetch products!", { autoClose: 2000 });
-    }
-  };
-  fetchProducts();
+ const fetchProducts = async () => {
+   try {
+     const response = await fetch("/api/products");
+     if (!response.ok) {
+       throw new Error(`HTTP error! status: ${response.status}`);
+     }
+     const data = await response.json();
+     setProducts(data);
+   } catch (error) {
+     toast.error("Failed to fetch products!", { autoClose: 2000 });
+   }
+ };
+ fetchProducts();
 }, []);
 
 const addProduct = async (product) => {
-  try {
-    const response = await fetch(
-      "http://localhost:8080/api/products",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(product),
-      }
-    );
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-    const newProduct = await response.json();
-    setProducts((prevProducts) => [...prevProducts, newProduct]);
-    toast.success("Product added successfully!", { autoClose: 2000 });
-  } catch (error) {
-    toast.error("Failed to add product!", { autoClose: 2000 });
-  }
+ try {
+   const response = await fetch("/api/products", {
+       method: "POST",
+       headers: {
+         "Content-Type": "application/json",
+       },
+       body: JSON.stringify(product),
+     }
+   );
+   if (!response.ok) {
+     throw new Error(`HTTP error! status: ${response.status}`);
+   }
+   const newProduct = await response.json();
+   setProducts((prevProducts) => [...prevProducts, newProduct]);
+   toast.success("Product added successfully!", { autoClose: 2000 });
+ } catch (error) {
+   toast.error("Failed to add product!", { autoClose: 2000 });
+ }
 };
 
 const updateProduct = async (product, id) => {
-  try {
-    const response = await fetch(
-      `http://localhost:8080/api/products/${id}`,
-      {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(product),
-      }
-    );
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-    const updatedProduct = await response.json();
-    setProducts((prevProducts) =>
-      prevProducts.map((p, i) => (i === id ? updatedProduct : p))
-    );
-    toast.info("Product updated successfully!", { autoClose: 2000 });
-  } catch (error) {
-    toast.error("Failed to update product!", { autoClose: 2000 });
-  }
+ try {
+   const response = await fetch(`/api/products/${id}`, {
+       method: "PUT",
+       headers: {
+         "Content-Type": "application/json",
+       },
+       body: JSON.stringify(product),
+     }
+   );
+   if (!response.ok) {
+     throw new Error(`HTTP error! status: ${response.status}`);
+   }
+   const updatedProduct = await response.json();
+   setProducts((prevProducts) =>
+     prevProducts.map((p, i) => (i === id ? updatedProduct : p))
+   );
+   toast.info("Product updated successfully!", { autoClose: 2000 });
+ } catch (error) {
+   toast.error("Failed to update product!", { autoClose: 2000 });
+ }
 };
 
 const deleteProduct = async (id) => {
-  try {
-    const response = await fetch(
-      `http://localhost:8080/api/products/${id}`,
-      {
-        method: "DELETE",
-      }
-    );
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-    setProducts((prevProducts) => prevProducts.filter((_, i) => i !== id));
-    toast.error("Product deleted successfully!", { autoClose: 2000 });
-  } catch (error) {
-    toast.error("Failed to delete product!", { autoClose: 2000 });
-  }
+ try {
+   const response = await fetch(`/api/products/${id}`, {
+       method: "DELETE",
+     }
+   );
+   if (!response.ok) {
+     throw new Error(`HTTP error! status: ${response.status}`);
+   }
+   setProducts((prevProducts) => prevProducts.filter((_, i) => i !== id));
+   toast.error("Product deleted successfully!", { autoClose: 2000 });
+ } catch (error) {
+   toast.error("Failed to delete product!", { autoClose: 2000 });
+ }
 };
 
 const handleSearchChange = (e) => {
-  setSearchTerm(e.target.value);
+ setSearchTerm(e.target.value);
 };
 
 const filteredProducts = products.filter((product) =>
-  product.name.toLowerCase().includes(searchTerm.toLowerCase())
+ product.name.toLowerCase().includes(searchTerm.toLowerCase())
 );
 
 return (
-  <>
-    <div className="flex items-center gap-2 mb-4">
-      <input
-        type="text"
-        placeholder="Search products..."
-        value={searchTerm}
-        onChange={handleSearchChange}
-        className="w-full p-2 border rounded"
-      />
-      <button className="bg-blue-500 text-white p-2 rounded flex items-center">
-        <MdSearch className="mr-2" />
-        Search
-      </button>
-    </div>
+ <>
+   <div className="flex items-center gap-2 mb-4">
+     <input
+       type="text"
+       placeholder="Search products..."
+       value={searchTerm}
+       onChange={handleSearchChange}
+       className="w-full p-2 border rounded"
+     />
+     <button className="bg-blue-500 text-white p-2 rounded flex items-center">
+       <MdSearch className="mr-2" />
+       Search
+     </button>
+   </div>
 
-    <NewProduct addProduct={addProduct} />
+   <NewProduct addProduct={addProduct} />
 
-    {filteredProducts.length > 0 ? (
-      <table className="min-w-full mt-6 border-collapse">
-        <thead>
-          <tr className="bg-gray-200">
-            <th className="px-4 py-2 border">#</th>
-            <th className="px-4 py-2 border">Name</th>
-            <th className="px-4 py-2 border">Description</th>
-            <th className="px-4 py-2 border">Price</th>
-            <th className="px-4 py-2 border">Quantity</th>
-            <th className="px-4 py-2 border">Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {filteredProducts.map((product, index) => (
-            <ProductItem
-              key={index}
-              id={index}
-              product={product}
-              updateProduct={updateProduct}
-              deleteProduct={deleteProduct}
-            />
-          ))}
-        </tbody>
-      </table>
-    ) : (
-      <p className="mt-6 text-center text-gray-500">
-        No products found matching your search.
-      </p>
-    )}
-  </>
+   {filteredProducts.length > 0 ? (
+     <table className="min-w-full mt-6 border-collapse">
+       <thead>
+         <tr className="bg-gray-200">
+           <th className="px-4 py-2 border">#</th>
+           <th className="px-4 py-2 border">Name</th>
+           <th className="px-4 py-2 border">Description</th>
+           <th className="px-4 py-2 border">Price</th>
+           <th className="px-4 py-2 border">Quantity</th>
+           <th className="px-4 py-2 border">Actions</th>
+         </tr>
+       </thead>
+       <tbody>
+         {filteredProducts.map((product, index) => (
+           <ProductItem
+             key={index}
+             id={index}
+             product={product}
+             updateProduct={updateProduct}
+             deleteProduct={deleteProduct}
+           />
+         ))}
+       </tbody>
+     </table>
+   ) : (
+     <p className="mt-6 text-center text-gray-500">
+       No products found matching your search.
+     </p>
+   )}
+ </>
 );
 };
 

@@ -4,7 +4,7 @@ import { MdDelete, MdEdit } from "react-icons/md";
 const ProductItem = ({ product, id, updateProduct, deleteProduct }) => {
   const [editing, setEditing] = useState(false);
   const [editedProduct, setEditedProduct] = useState({ ...product });
-  const dialog = useRef();
+  const dialog = useRef(null);
 
   const handleEditChange = (e) => {
     const { name, value } = e.target;
@@ -14,17 +14,28 @@ const ProductItem = ({ product, id, updateProduct, deleteProduct }) => {
   const submitEdit = (e) => {
     e.preventDefault();
     updateProduct(editedProduct, id);
-    dialog.current.close();
+    if (dialog.current) {
+      dialog.current.close();
+    }
     setEditing(false);
   };
 
   const openModal = () => {
-    setEditing(true);
-    dialog.current.showModal();
+    if (dialog.current) {
+      setEditing(true);
+      dialog.current.showModal();
+    }
+  };
+
+  const closeModal = () => {
+    if (dialog.current) {
+      dialog.current.close();
+      setEditing(false);
+    }
   };
 
   return (
-    <>
+    <React.Fragment>
       <tr className="bg-white border-b">
         <td className="px-4 py-2">{id + 1}</td>
         <td className="px-4 py-2">{product.name}</td>
@@ -43,11 +54,11 @@ const ProductItem = ({ product, id, updateProduct, deleteProduct }) => {
           </button>
         </td>
       </tr>
-
+      
       <dialog
         ref={dialog}
-        className="rounded-md w-[480px]"
-        onClick={(e) => e.target === dialog.current && dialog.current.close()}
+        className="rounded-md w-[480px] relative"
+        onClick={(e) => e.target === dialog.current && closeModal()}
       >
         <form className="p-6" onSubmit={submitEdit}>
           <h3 className="font-semibold text-xl">Edit Product</h3>
@@ -93,7 +104,7 @@ const ProductItem = ({ product, id, updateProduct, deleteProduct }) => {
           <div className="mt-6 text-right space-x-2">
             <button
               type="button"
-              onClick={() => dialog.current.close()}
+              onClick={closeModal}
               className="rounded border border-gray-200 px-3 py-2 hover:bg-gray-50"
             >
               Close
@@ -107,7 +118,7 @@ const ProductItem = ({ product, id, updateProduct, deleteProduct }) => {
           </div>
         </form>
       </dialog>
-    </>
+    </React.Fragment>
   );
 };
 
